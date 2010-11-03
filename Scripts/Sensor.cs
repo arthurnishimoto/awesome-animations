@@ -29,10 +29,15 @@ public class Sensor : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.tag != "Floor" && other.tag != "Flock")
+		
+        if (other.tag != "Floor" && other.tag != "Sensor" )
         {
 			collision = true;
         }
+		if( this.name == "SensorS" && other.tag == "Sensor" && other.name == "SensorS" )
+		{
+			//collision = true;
+		}
     }
 
 }
