@@ -30,8 +30,8 @@ public class Move2D : MonoBehaviour
 	float turningForwardSpeed = 0.02f; // movement speed in meters/sec
     public float turningSpeed = 1.0f;
 
-    float flockDistance = 2.0f;
-    float separationDistance = 1.5f;
+    float flockDistance = 0.5f;
+    float separationDistance = 0.4f;
 	int separationStrength = 6; // Multiplies separation vector if objects are within half the separation distance of each other.
 	
 	float cohesionWeight = 1.0f; // Multiplier for alignment vector
@@ -43,7 +43,7 @@ public class Move2D : MonoBehaviour
     void Start()
     {
         thisObject = this.transform;
-        //thisObject.position = new Vector3(UnityEngine.Random.Range(-20.0f, 20.0f), 0, UnityEngine.Random.Range(-20.0f, 20.0f));
+        thisObject.position = new Vector3(UnityEngine.Random.Range(-2.0f, 2.0f), 0.06f, UnityEngine.Random.Range(-2.0f, 2.0f));
         thisObject.eulerAngles = new Vector3(0, UnityEngine.Random.Range(0.0f, 360.0f), 0);
 
         //destination[0] = UnityEngine.Random.Range(-200.0f, 200.0f);
@@ -226,7 +226,7 @@ public class Move2D : MonoBehaviour
 			double distanceToFlockmate = GetDistanceBetween(position[0], position[1], position[2], flockmatePos.x, flockmatePos.y, flockmatePos.z);
 			
             // Add vectors of flockmates, ignoring 
-			if (this != flock[i] && distanceToFlockmate <= flockDistance )
+			if (this != flock[i] && distanceToFlockmate <= flockDistance)
             {
                 newVector += flockmatePos;
 				flockmates++;
