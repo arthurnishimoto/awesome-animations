@@ -26,19 +26,19 @@ public class Move2D : MonoBehaviour
 
     double distanceToTarget = 0;
 
-    float speed = 0.005f; // movement speed in meters/sec
-	float turningForwardSpeed = 0.005f; // movement speed in meters/sec
-    public float turningSpeed = 0.1f;
+    public float speed = 0.005f; // movement speed in meters/sec
+	public float turningForwardSpeed = 0.005f; // movement speed in meters/sec
+    public float turningSpeed = 1.0f;
 
-    float flockDistance = 0.5f;
-    float separationDistance = 0.4f;
+    public float flockDistance = 0.5f;
+    public float separationDistance = 0.4f;
 	int separationStrength = 6; // Multiplies separation vector if objects are within half the separation distance of each other.
 	
-	float cohesionWeight = 1.0f; // Multiplier for cohesion vector
-	float separationWeight = 1.0f; // Multiplier for separation vector
-	float alignmentWeight = 0.05f; // Multiplier for alignment vector
-	float targetWeight = 0.05f; // Multiplier for target vector
-	public bool flock = true; // Flag used to stop flocking during collision
+	public float cohesionWeight = 1.0f; // Multiplier for cohesion vector
+	public float separationWeight = 1.0f; // Multiplier for separation vector
+	public float alignmentWeight = 0.05f; // Multiplier for alignment vector
+	public float targetWeight = 0.5f; // Multiplier for target vector
+	public bool flocking = true; // Flag used to stop flocking during collision
 	
     // Use this for initialization
     void Start()
@@ -75,12 +75,15 @@ public class Move2D : MonoBehaviour
 		//destination[0] = position[0];
         //destination[2] = position[2];
 		
-        Vector3 cohesionVector = Cohesion() * cohesionWeight;
-        Vector3 separationVector = Separation() * separationWeight;
-        Vector3 alignmentVector = Alignment() * alignmentWeight;
+		// Get all flockmates
+		GameObject[] flock = GameObject.FindGameObjectsWithTag("Flock");
+		
+        Vector3 cohesionVector = Cohesion(flock) * cohesionWeight;
+        Vector3 separationVector = Separation(flock) * separationWeight;
+        Vector3 alignmentVector = Alignment(flock) * alignmentWeight;
         Vector3 targetVector = FollowTarget() * targetWeight;
 		
-		if( flock ){
+		if( flocking ){
 			destination[0] += cohesionVector.x;
 			destination[2] += cohesionVector.z;
 			destination[0] += separationVector.x;
@@ -203,20 +206,20 @@ public class Move2D : MonoBehaviour
 				transform.Rotate(0, turnAngle, 0);
 			else
 				transform.Rotate(0, lastTurnAngle, 0);
-			flock = false;
+			flocking = false;
 		}
 		else
 		{
-			flock = true;
+			flocking = true;
 			transform.Translate(speed, 0, 0);
 		}
     }// Move
 
-    Vector3 Cohesion()
+    Vector3 Cohesion( GameObject[] flock )
     {
         Vector3 newVector = new Vector3(0,0,0);
 
-        GameObject[] flock = GameObject.FindGameObjectsWithTag("Flock");
+        
 		int flockmates = 0;
 
         // Calculate the center of mass of the flock
@@ -241,10 +244,8 @@ public class Move2D : MonoBehaviour
         return newVector - this.transform.position;
     }// cohesion
 
-    Vector3 Separation(){
+    Vector3 Separation( GameObject[] flock ){
         Vector3 newVector = new Vector3(0,0,0);
-
-        GameObject[] flock = GameObject.FindGameObjectsWithTag("Flock");
 
         // Calculate the center of mass of the flock
         for (int i = 0; i < flock.Length; i++)
@@ -263,11 +264,10 @@ public class Move2D : MonoBehaviour
         return newVector;
     }// Separation
 
-    Vector3 Alignment()
+    Vector3 Alignment( GameObject[] flock )
     {
         Vector3 newVector = new Vector3(0,0,0);
 
-        GameObject[] flock = GameObject.FindGameObjectsWithTag("Flock");
 		int flockmates = 0;
 		
         // Calculate the average direction of the flock
