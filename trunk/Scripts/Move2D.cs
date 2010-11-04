@@ -26,17 +26,18 @@ public class Move2D : MonoBehaviour
 
     double distanceToTarget = 0;
 
-    float speed = 0.02f; // movement speed in meters/sec
-	float turningForwardSpeed = 0.02f; // movement speed in meters/sec
-    public float turningSpeed = 1.0f;
+    float speed = 0.005f; // movement speed in meters/sec
+	float turningForwardSpeed = 0.005f; // movement speed in meters/sec
+    public float turningSpeed = 0.1f;
 
     float flockDistance = 0.5f;
     float separationDistance = 0.4f;
 	int separationStrength = 6; // Multiplies separation vector if objects are within half the separation distance of each other.
 	
-	float cohesionWeight = 1.0f; // Multiplier for alignment vector
-	float separationWeight = 1.0f; // Multiplier for alignment vector
+	float cohesionWeight = 1.0f; // Multiplier for cohesion vector
+	float separationWeight = 1.0f; // Multiplier for separation vector
 	float alignmentWeight = 0.05f; // Multiplier for alignment vector
+	float targetWeight = 0.05f; // Multiplier for target vector
 	public bool flock = true; // Flag used to stop flocking during collision
 	
     // Use this for initialization
@@ -77,16 +78,15 @@ public class Move2D : MonoBehaviour
         Vector3 cohesionVector = Cohesion() * cohesionWeight;
         Vector3 separationVector = Separation() * separationWeight;
         Vector3 alignmentVector = Alignment() * alignmentWeight;
-        Vector3 targetVector = FollowTarget() * 0.00f;
+        Vector3 targetVector = FollowTarget() * targetWeight;
 		
 		if( flock ){
 			destination[0] += cohesionVector.x;
 			destination[2] += cohesionVector.z;
 			destination[0] += separationVector.x;
 			destination[2] += separationVector.z;
-			//destination[0] += targetVector.x;
-			//destination[2] += targetVector.z;
-			
+			destination[0] += targetVector.x;
+			destination[2] += targetVector.z;
 			//destination[1] += cohesionVector.y;
 			//destination[1] += separationVector.y;
 
@@ -295,28 +295,29 @@ public class Move2D : MonoBehaviour
         if (target != null)
         {
             newVector.x = target.transform.position.x;
+			newVector.y = target.transform.position.y;
             newVector.z = target.transform.position.z;
-            distanceToTarget = GetDistanceBetween(position[0], position[2], newVector.x, newVector.z);
-			
+            //distanceToTarget = GetDistanceBetween(position[0], position[2], newVector.x, newVector.z);
+			/*
 			if (distanceToTarget < 5.0)
 			{
-            //GameObject[] targets = GameObject.FindGameObjectsWithTag("Target");
-            //int rand = UnityEngine.Random.Range( 0, targets.Length );
-            //target = targets[rand];
+				//GameObject[] targets = GameObject.FindGameObjectsWithTag("Target");
+				//int rand = UnityEngine.Random.Range( 0, targets.Length );
+				//target = targets[rand];
 
-            //destination[0] = target.transform.position.x;
-            //destination[1] = target.transform.position.y;
-            //destination[2] = target.transform.position.z;
+				//destination[0] = target.transform.position.x;
+				//destination[1] = target.transform.position.y;
+				//destination[2] = target.transform.position.z;
 
-            newVector.x = UnityEngine.Random.Range(-200.0f, 200.0f);
-            newVector.y = UnityEngine.Random.Range(0.0f, 0.0f);
-            newVector.z = UnityEngine.Random.Range(-200.0f, 200.0f);
+				//newVector.x = UnityEngine.Random.Range(-200.0f, 200.0f);
+				//newVector.y = UnityEngine.Random.Range(0.0f, 0.0f);
+				//newVector.z = UnityEngine.Random.Range(-200.0f, 200.0f);
 
-            target.transform.position = newVector;
+				//target.transform.position = newVector;
 			}
+			*/
 		
         }// if
-
         return newVector - this.transform.position;
     }// FollowTarget
 
