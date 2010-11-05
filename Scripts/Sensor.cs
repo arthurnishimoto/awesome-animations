@@ -5,6 +5,7 @@ public class Sensor : MonoBehaviour
 {
     public Move2D parent;
     public bool collision = false;
+	public bool collisionSensorTrigger = false;
 
     // Use this for initialization
     void Start()
@@ -33,11 +34,12 @@ public class Sensor : MonoBehaviour
         if (other.tag != "Floor" && other.tag != "Sensor" )
         {
 			collision = true;
+			if( this.name == "CollisionSensor" )
+			{
+				collisionSensorTrigger = true;
+				Destroy(parent.gameObject);
+			}
         }
-		if( this.name == "SensorS" && other.tag == "Sensor" && other.name == "SensorS" )
-		{
-			//collision = true;
-		}
     }
 
 }

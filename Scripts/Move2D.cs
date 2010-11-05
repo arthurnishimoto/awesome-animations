@@ -15,7 +15,6 @@ public class Move2D : MonoBehaviour
 	
 	public float turnAngle = 0;
 	public float lastTurnAngle = 0;
-	bool turning = false;
 	
     float[] position = { 0, 0, 0 };
     float[] destination = { 0, 0, 0 };
@@ -92,8 +91,9 @@ public class Move2D : MonoBehaviour
 			destination[2] += targetVector.z;
 			//destination[1] += cohesionVector.y;
 			//destination[1] += separationVector.y;
-
-			transform.Rotate( 0, alignmentVector.y, 0 );
+			//Debug.Log(alignmentVector.y);
+			if( Mathf.Abs( alignmentVector.y ) < 1.0f )
+				transform.Rotate( 0, alignmentVector.y, 0 );
 		}
         //Debug.Log("Position - Distance to Destination: " + distanceToDestination );
         RotateToDestination();
@@ -195,7 +195,8 @@ public class Move2D : MonoBehaviour
 			else if( !leftSensor.collision && rightSensor.collision && turnAngle == 0 )
 				setTurnAngle( -turningSpeed );
 			else if( leftSensor.collision && rightSensor.collision && turnAngle == 0 )
-				setTurnAngle( lastTurnAngle );				
+				setTurnAngle( lastTurnAngle );
+			transform.Rotate(0, turnAngle, 0);
 		}
 		else if( stopSensor.collision )
 		{
