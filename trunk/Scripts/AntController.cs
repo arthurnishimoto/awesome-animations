@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class AntController : MonoBehaviour {
+	
 	float d_flockDistance = 0.5f;
     float d_separationDistance = 0.4f;
 	float d_cohesionWeight = 1.0f; // Multiplier for cohesion vector
@@ -12,6 +13,7 @@ public class AntController : MonoBehaviour {
 	float d_turningForwardSpeed = 0.005f; // movement speed in meters/sec
     float d_turningSpeed = 1.0f;
 	
+	public GameObject target;
 	public float flockDistance;
     public float separationDistance;
 	public float cohesionWeight; // Multiplier for cohesion vector
@@ -61,6 +63,7 @@ public class AntController : MonoBehaviour {
 			Move2D boidComponent = boid.GetComponent<Move2D>();
 			if( boidComponent != null )
 			{
+				boidComponent.target = target;
 				boidComponent.cohesionWeight = cohesionWeight; // Multiplier for cohesion vector
 				boidComponent.separationWeight = separationWeight; // Multiplier for separation vector
 				boidComponent.alignmentWeight = alignmentWeight; // Multiplier for alignment vector
